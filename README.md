@@ -20,6 +20,18 @@ A Virtual Machine image is available for download. It is ready to go for buildin
 
 Link for dowwnload: [Google Drive](https://drive.google.com/drive/folders/1gb-PGhSQmvJLW4VFF1y_tesKdOr_IGHN?usp=sharing)
 
+### Buidling on Debian 11 ###
+
+You will need an x86-64 install of Debian configured with Multiarch https://wiki.debian.org/Multiarch/HOWTO
+
+Append sudo if not root.
+
+dpkg --add-architecture i386
+apt-get update
+apt-get -y install binutils:i386 gcc:i386
+
+Then run `make`
+
 ### Who do I talk to? ###
 
 * bennydiamond on AssemblerGames forums
