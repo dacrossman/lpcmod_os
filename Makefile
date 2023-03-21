@@ -1,4 +1,4 @@
-PREFIX = #i686-linux-gnu-
+PREFIX = i686-linux-gnu-
 CC	= ${PREFIX}gcc
 
 # prepare check for gcc 3.3, $(GCC_3.3) will either be 0 or 1
@@ -7,6 +7,8 @@ GCC_3.3 := $(shell expr `$(CC) -dumpversion` \>= 3.3)
 GCC_4.2 := $(shell expr `$(CC) -dumpversion` \>= 4.2)
 
 GCC_6.2 := $(shell expr `$(CC) -dumpversion` \>= 6.2)
+
+GCC_10 := $(shell expr `$(CC) -dumpversion` \>= 10)
 
 DEBUG ?= 0 #run make with "DEBUG=1" argument to enable extra debug
 SPITRACE ?= 0 #run make with "SPITRACE=1" argument to enable debig strings prints on SPI. Must have "DEBUG" = 1
@@ -45,6 +47,12 @@ endif
 ifeq ($(GCC_6.2), 1)
 CFLAGS += -fno-PIC
 2BL_CFLAGS += -fno-PIC
+endif
+
+# add the option for gcc 10 only, again, non-overridable
+ifeq ($(GCC_10), 1)
+CFLAGS += -Wno-address-of-packed-member -fcommon
+2BL_CFLAGS += -fcommon
 endif
 
 LD      = ${PREFIX}ld
@@ -89,7 +97,7 @@ CROM_CFLAGS += -DDEBUGLOGGER
 
 LDFLAGS-ROM     = -s -S -T $(TOPDIR)/scripts/ldscript-crom.ld
 LDFLAGS-XBEBOOT = -s -S -T $(TOPDIR)/scripts/xbeboot.ld
-LDFLAGS-ROMBOOT = -s -S -T $(TOPDIR)/boot_rom/bootrom.ld
+LDFLAGS-ROMBOOT = --no-check-sections -s -S -T $(TOPDIR)/boot_rom/bootrom.ld
 LDFLAGS-VMLBOOT = -s -S -T $(TOPDIR)/boot_vml/vml_start.ld
 ifeq ($(ETHERBOOT), yes)
 LDFLAGS-ETHBOOT = -s -S -T $(TOPDIR)/boot_eth/eth_start.ld
